@@ -1,0 +1,31 @@
+@startuml
+actor User
+participant "Frontend (React)" as FE
+participant "Backend (Kotlin API)" as BE
+participant "OpenAPI" as AI
+database "MySQL DB" as DB
+
+User -> FE: Login/Register
+FE -> BE: Authenticate User
+BE --> FE: Auth Success
+
+User -> FE: Create Podcast (title, tags, etc.)
+FE -> BE: Save Podcast data
+BE -> DB: Insert Podcast record
+DB --> BE: Podcast ID
+BE --> FE: Podcast Created with ID
+
+User -> FE: Enter Episode Prompt
+FE -> BE: Send prompt for episode generation
+BE -> AI: Generate episode text (prompt)
+AI --> BE: Episode text
+BE -> AI: Convert text to audio
+AI --> BE: Audio file URL or data
+
+BE -> DB: Save Episode (text + audio + metadata)
+DB --> BE: Episode saved
+BE --> FE: Episode created with details
+
+FE --> User: Show Episode info
+
+@enduml

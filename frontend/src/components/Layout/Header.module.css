@@ -1,0 +1,30 @@
+.header {
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  background: var(--color-bg-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: var(--color-primary);
+}
+
+.search {
+  flex: 1 1 300px;
+  margin: 0 2rem;
+  padding: 0.5em 1em;
+  border-radius: var(--border-radius);
+  border: 1px solid #ccc;
+  font-size: 1em;
+  background: #f9f9f9;
+}
+
+.user {
+  color: var(--color-text);
+  font-size: 1em;
+} 

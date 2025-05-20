@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor User
+actor Moderator
+actor AI_System as AI
+
+rectangle "Podcast App" {
+	User ---> (Change Podcast visability)
+	User ---> (Register/Login)
+	User ---> (Browse Podcasts)
+	User ---> (Search Podcasts)
+	User ---> (Change personal information)
+	User ---> (Load Podcast)
+	User ---> (Create Podcast)
+	User ---> (Generate Episode)
+	User ---> (Change Episode prompt)
+	User ---> (Listen to Episode)
+
+	(Generate Episode) ---> AI : Send prompt
+	AI ---> (Generate Episode) : Return text+audio
+
+
+	Moderator ---> (Ban User)
+	Moderator ---> (Delete Podcast)
+}
+@enduml
