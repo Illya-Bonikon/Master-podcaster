@@ -7,7 +7,7 @@
 	box-shadow: var(--shadow-sm);
 	display: flex;
 	flex-direction: column;
-gap: 1.2rem;
+	gap: 1.2rem;
 }
 
 .title {
@@ -27,7 +27,7 @@ input {
 	border-radius: var(--border-radius);
 	border: 1px solid #ccc;
 	font-size: 1em;
-	background: #f9f9f9;
+	background: var(--input-bg, var(--color-bg-light));
 	color: var(--color-text);
 }
 
@@ -48,4 +48,11 @@ input {
 .error {
 	color: var(--color-danger);
 	font-size: 0.95em;
+}
+
+:root {
+	--input-bg: var(--color-bg-light);
+}
+[data-theme="dark"] {
+	--input-bg: #232323;
 } 

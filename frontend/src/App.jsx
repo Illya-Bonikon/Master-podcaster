@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import BackgroundWaves from "./components/Layout/BackgroundWaves";
 import MainLayout from "./components/Layout/MainLayout";
 import AuthLayout from "./components/Layout/AuthLayout";
 import LoginForm from "./components/Auth/LoginForm";
@@ -11,36 +12,38 @@ import PodcastCreateForm from "./components/Podcast/PodcastCreateForm";
 import PodcastDetails from "./components/Podcast/PodcastDetails";
 import EpisodeCreateForm from "./components/Episode/EpisodeCreateForm";
 import SearchPage from "./components/Search/SearchPage";
+import WelcomePage from './components/WelcomePage';
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-
-        <Route path="/login" element={
-          <AuthLayout>
-            <LoginForm onSubmit={data => alert(JSON.stringify(data))} />
-          </AuthLayout>
-        } />
-        <Route path="/register" element={
-          <AuthLayout>
-            <RegisterForm onSubmit={data => alert(JSON.stringify(data))} />
-          </AuthLayout>
-        } />
-
-        <Route path="/" element={<MainLayout><PodcastList /></MainLayout>} />
-        <Route path="/library" element={<MainLayout><LibraryPage /></MainLayout>} />
-        <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-        <Route path="/search" element={<MainLayout><SearchPage /></MainLayout>} />
-        <Route path="/podcast/create" element={<MainLayout><PodcastCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />
-        <Route path="/podcast/:id" element={<MainLayout><PodcastDetails /></MainLayout>} />
-        <Route path="/episode/create/:podcastId" element={<MainLayout><EpisodeCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />
-
-        {/* 404 */}
-        <Route path="*" element={<div style={{textAlign: 'center', marginTop: '3rem'}}>Сторінка не знайдена</div>} />
-      </Routes>
-    </Router>
-  );
+	return (
+		<Router>
+		<BackgroundWaves />
+		<div style={{ position: 'relative', zIndex: 1 }}>
+			<Routes>
+			<Route path="/login" element={
+				<AuthLayout>
+				<LoginForm onSubmit={data => alert(JSON.stringify(data))} />
+				</AuthLayout>
+			} />
+			<Route path="/register" element={
+				<AuthLayout>
+				<RegisterForm onSubmit={data => alert(JSON.stringify(data))} />
+				</AuthLayout>
+			} />
+			<Route path="/" element={<WelcomePage />} />
+			<Route path="/podcasts" element={<MainLayout><PodcastList /></MainLayout>} />
+			<Route path="/library" element={<MainLayout><LibraryPage /></MainLayout>} />
+			<Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
+			<Route path="/search" element={<MainLayout><SearchPage /></MainLayout>} />
+			<Route path="/podcast/create" element={<MainLayout><PodcastCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />
+			<Route path="/podcast/:id" element={<MainLayout><PodcastDetails /></MainLayout>} />
+			<Route path="/episode/create/:podcastId" element={<MainLayout><EpisodeCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />
+			{/* 404 */}
+			<Route path="*" element={<div style={{textAlign: 'center', marginTop: '3rem'}}>Сторінка не знайдена</div>} />
+			</Routes>
+		</div>
+		</Router>
+	);
 }
 
 export default App;

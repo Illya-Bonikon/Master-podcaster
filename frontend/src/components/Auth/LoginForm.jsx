@@ -1,12 +1,19 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './LoginForm.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({ onSubmit }) => {
+	const navigate = useNavigate();
 	const { register, handleSubmit, formState: { errors } } = useForm();
 
+	const handleLogin = data => {
+		onSubmit(data);
+		navigate('/podcasts');
+	};
+
 	return (
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+		<form className={styles.form} onSubmit={handleSubmit(handleLogin)}>
 			<h2 className={styles.title}>Вхід</h2>
 			
 			<div className={styles.field}>

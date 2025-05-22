@@ -1,12 +1,12 @@
 .authBg {
-  min-height: 100vh;
-  background: var(--color-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	min-height: 100vh;
+	background: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .centered {
-  width: 100%;
-  max-width: 400px;
+	width: 100%;
+	max-width: 400px;
 } 

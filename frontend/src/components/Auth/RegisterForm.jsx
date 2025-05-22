@@ -1,14 +1,21 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './RegisterForm.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = ({ onSubmit }) => {
+	const navigate = useNavigate();
 	const { register, handleSubmit, watch, formState: { errors } } = useForm();
 	const password = watch('password');
 
+	const handleRegister = data => {
+		onSubmit(data);
+		navigate('/podcasts');
+	};
+
 	return (
 		
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+		<form className={styles.form} onSubmit={handleSubmit(handleRegister)}>
 			
 			<h2 className={styles.title}>Реєстрація</h2>
 

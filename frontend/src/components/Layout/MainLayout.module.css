@@ -1,14 +1,16 @@
 .layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-bg);
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	background: transparent;
+	padding-top: var(--header-height);
+	padding-bottom: var(--player-height);
 }
 
 .main {
-  flex: 1 1 auto;
-  padding: 2rem 0 2rem 0;
-  max-width: 900px;
-  margin: 0 auto;
-  width: 100%;
+	flex: 1 1 auto;
+	padding: 2rem 0 2rem 0;
+	max-width: 900px;
+	margin: 0 auto;
+	width: 100%;
 } 

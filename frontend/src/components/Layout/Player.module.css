@@ -1,40 +1,316 @@
+.wrapper {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	background: var(--color-bg-light);
+	box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+	z-index: 100;
+	padding: 0;
+	height: auto;
+	box-sizing: border-box;
+}
+
+.progressBar {
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: transparent;
+	border-radius: 0;
+	outline: none;
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+
+	background-image: linear-gradient(
+		to right,
+		var(--color-primary-hover) 0%,
+		var(--color-primary-hover) var(--progress-percent),
+		#b0b0b0 var(--progress-percent),
+		#b0b0b0 100%
+	);
+
+	transition: height 0.2s;
+	z-index: 2;
+}
+
+.progressBar:hover {
+  	height: 8px;
+}
+
+.progressBar::-webkit-slider-runnable-track {
+	height: 4px;
+	background: transparent;
+	border-radius: 0;
+}
+
+.progressBar::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 12px;
+	height: 12px;
+	background: var(--color-primary-hover);
+	border-radius: 50%;
+	margin-top: -4px;
+	transition: width 0.2s, height 0.2s, margin-top 0.2s, background 0.2s;
+	cursor: pointer;
+}
+
+.progressBar:hover::-webkit-slider-thumb {
+	width: 18px;
+	height: 18px;
+	margin-top: -7px;
+	background: var(--color-primary);
+}
+
+.progressBar::-moz-range-track {
+	height: 4px;
+	background: transparent;
+	border-radius: 0;
+}
+
+.progressBar::-moz-range-thumb {
+	width: 12px;
+	height: 12px;
+	background: var(--color-primary-hover);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: width 0.2s, height 0.2s, background 0.2s;
+}
+
+.progressBar:hover::-moz-range-thumb {
+	width: 18px;
+	height: 18px;
+	background: var(--color-primary);
+}
+
+.progressBar:hover::-moz-range-track {
+  	height: 8px;
+}
+
 .player {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: var(--player-height);
-  background: var(--color-bg-light);
-  box-shadow: 0 -2px 8px rgba(0,0,0,0.07);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-  z-index: 100;
+	font-size: 14px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 16px;
+	flex-wrap: nowrap;
+	gap: 16px;
+	position: relative;
+	margin-top: 8px; 
+	margin-left: 5%;
+	margin-right: 5%;
+	z-index: 1;
 }
 
-.btn {
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 1.3em;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s;
-}
-.btn:hover {
-  background: var(--color-primary-hover);
+.left,
+.right {
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
 
-.progress {
-  width: 300px;
+.center {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-grow: 1;
+	justify-content: center;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.episodeIcon {
+	font-size: 28px;
+	flex-shrink: 0;
+	}
+
+.episodeInfo {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.episodeTitle {
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.podcastName {
+	font-size: 0.85em;
+	color: var(--input-placeholder-color);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.controlBtn {
+	background: var(--color-primary-hover);
+	color: #fff;
+	border: none;
+	border-radius: 50%;
+	width: 44px;
+	height: 44px;
+	font-size: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.controlBtn:hover {
+  	background: var(--color-primary-hover);
+}
+
+.volumeIcon {
+	font-size: 18px;
+	color: var(--text-color);
 }
 
 .volume {
-  width: 100px;
-} 
+	width: 100px;
+	height: 6px;
+	background: transparent;
+	-webkit-appearance: none;
+	appearance: none;
+	cursor: pointer;
+	background-image: linear-gradient(
+		to right,
+		linear-gradient(90deg, var(--color-primary-hover), var(--color-primary-hover)) 0%,
+		var(--color-primary-hover) var(--volume-percent),
+		#b0b0b0 var(--volume-percent),
+		#b0b0b0 100%
+	);
+}
+
+.volume::-webkit-slider-runnable-track {
+	height: 6px;
+	background-image: linear-gradient(
+		to right,
+		var(--color-primary-hover) 0%,
+		var(--color-primary-hover) var(--volume-percent),
+		#b0b0b0 var(--volume-percent),
+		#b0b0b0 100%
+	);
+	border-radius: 4px;
+}
+
+.volume::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 12px;
+	height: 12px;
+	background: var(--color-primary-hover);
+	border-radius: 50%;
+	margin-top: -3px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.volume:hover::-webkit-slider-thumb {
+  	background: var(--color-primary-hover);
+}
+
+.volume::-moz-range-track {
+	height: 6px;
+	background-image: linear-gradient(
+		to right,
+		var(--color-primary-hover) 0%,
+		var(--color-primary-hover) var(--volume-percent),
+		#b0b0b0 var(--volume-percent),
+		#b0b0b0 100%
+	);
+	border-radius: 4px;
+}
+
+.volume::-moz-range-thumb {
+	width: 12px;
+	height: 12px;
+	background: var(--color-primary);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.volume:hover::-moz-range-thumb {
+  	background: var(--color-primary-hover);
+}
+
+.volume:hover {
+  	background-color: var(--color-bg);
+}
+
+@media (max-width: 768px) {
+	.wrapper {
+		height: 64px;
+		padding: 0 10px;
+	}
+
+	.player {
+		flex-direction: row;
+		align-items: center;
+		gap: 12px;
+		margin-top: 0;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.center {
+		flex-direction: row;
+		align-items: center;
+		gap: 8px;
+		justify-content: flex-start;
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.episodeIcon {
+		font-size: 28px;
+	}
+
+	.episodeInfo {
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.episodeTitle {
+		font-weight: 600;
+		font-size: 14px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.podcastName {
+		font-size: 12px;
+		color: var(--input-placeholder-color);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.left,
+	.right {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.right {
+		display: none;
+	}
+
+	.volume,
+	.volumeIcon {
+		display: none;
+	}
+}
+
