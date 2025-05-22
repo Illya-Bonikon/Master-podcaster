@@ -1,0 +1,22 @@
+package com.example.models.domain
+
+import kotlinx.serialization.Serializable
+import org.jetbrains.exposed.dao.id.IntIdTable
+
+object Podcasts : IntIdTable() {
+    val title = varchar("title", 200)
+    val prompt = varchar("prompt", 500)
+    val isPublic = bool("is_public")
+    val imagePath = varchar("image_path", 255)
+    val creatorId = reference("creator_id", Users)
+}
+
+@Serializable
+data class ExposedPodcast(
+    val id: Int,
+    val title: String,
+    val prompt: String,
+    val isPublic: Boolean,
+    val imagePath: String,
+    val creatorId: Int
+)
