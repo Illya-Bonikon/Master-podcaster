@@ -1,7 +1,5 @@
 package com.example
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import com.example.models.dto.UpdateUserRequest
 import com.example.models.dto.toExposedUser
 import com.example.models.dto.CreatePodcastRequest
@@ -10,30 +8,15 @@ import com.example.models.domain.ExposedEpisode
 import com.example.models.domain.ExposedPodcast
 import com.example.services.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.plugins.calllogging.*
-import io.ktor.server.plugins.compression.*
-import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.plugins.hsts.*
-import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
-import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import java.time.Duration
-import kotlin.time.Duration.Companion.seconds
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Database
-import org.slf4j.event.*
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
-import kotlinx.coroutines.runBlocking
 
 val aiSemaphore = Semaphore(1)
 
@@ -116,7 +99,7 @@ fun Application.configureRouting(database: Database) {
                         id = 0,
                         podcastId = id,
                         summary = audioResponse.summary,
-                        audioPath = audioResponse.audio_path
+                        audioPath = audioResponse.audioPath
                     )
                     val episodeId = episodeService.insert(episode)
                     call.respond(HttpStatusCode.Created, mapOf("id" to episodeId))
@@ -234,18 +217,6 @@ private suspend fun ApplicationCall.validateUserId(): Int? {
         return null
     }
     return userId
-}
-
-private suspend fun ApplicationCall.hasAccessToUser(userId: Int): Boolean {
-    val principal = principal<JWTPrincipal>() ?: return false.also {
-        respond(HttpStatusCode.Forbidden, errorResponse("🔒 Немає доступу"))
-    }
-    val tokenUserId = principal.getUserId()
-    if (tokenUserId != userId) {
-        respond(HttpStatusCode.Forbidden, errorResponse("🔒 Ви можете діяти лише від свого імені"))
-        return false
-    }
-    return true
 }
 
 private fun JWTPrincipal.getUserId(): Int? = payload.getClaim("userId").asInt()

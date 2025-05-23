@@ -13,13 +13,13 @@ import kotlinx.serialization.json.Json
 data class GenerateImageRequest(val text: String)
 
 @Serializable
-data class GenerateImageResponse(val image_path: String)
+data class GenerateImageResponse(val imagePath: String)
 
 @Serializable
 data class GenerateAudioSummaryRequest(val prompt: String)
 
 @Serializable
-data class GenerateAudioSummaryResponse(val summary: String, val audio_path: String)
+data class GenerateAudioSummaryResponse(val summary: String, val audioPath: String)
 
 class PythonAiService(
     private val baseUrl: String = "http://localhost:5000"
@@ -35,7 +35,7 @@ class PythonAiService(
             contentType(ContentType.Application.Json)
             setBody(GenerateImageRequest(text))
         }.body<GenerateImageResponse>()
-        return response.image_path
+        return response.imagePath
     }
 
     suspend fun generateAudioSummary(prompt: String): GenerateAudioSummaryResponse {

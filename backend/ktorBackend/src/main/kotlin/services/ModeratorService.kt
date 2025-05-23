@@ -2,9 +2,7 @@ package com.example.services
 
 import com.example.models.domain.ExposedModerator
 import com.example.models.domain.Moderators
-import com.example.models.domain.Users
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ModeratorService(private val database: Database) {
