@@ -402,3 +402,4 @@ FodyWeavers.xsd
 
 backend/pythonAI/.venv/
 .env
+backend/ktorBackend/src/main/kotlin/config/config.kt

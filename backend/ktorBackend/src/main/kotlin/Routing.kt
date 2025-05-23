@@ -31,6 +31,11 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Database
 import org.slf4j.event.*
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.runBlocking
+
+val aiSemaphore = Semaphore(1)
 
 fun Application.configureRouting(database: Database) {
     configureAuthRouting(database)
@@ -63,7 +68,11 @@ fun Application.configureRouting(database: Database) {
                     val principal = call.principal<JWTPrincipal>() ?: return@post
                     val creatorId = principal.getUserId() ?: return@post
                     val request = call.receive<CreatePodcastRequest>()
-                    val imagePath = aiService.generateImage(request.prompt)
+
+                    val imagePath = aiSemaphore.withPermit {
+                        aiService.generateImage(request.prompt)
+                    }
+
                     val podcast = ExposedPodcast(
                         id = 0,
                         title = request.title,
@@ -98,7 +107,11 @@ fun Application.configureRouting(database: Database) {
                     }
                     val request = call.receive<CreateEpisodeRequest>()
                     val fullPrompt = podcast.prompt + "\n" + request.prompt
-                    val audioResponse = aiService.generateAudioSummary(fullPrompt)
+
+                    val audioResponse = aiSemaphore.withPermit {
+                        aiService.generateAudioSummary(fullPrompt)
+                    }
+
                     val episode = ExposedEpisode(
                         id = 0,
                         podcastId = id,
@@ -130,10 +143,10 @@ fun Application.configureRouting(database: Database) {
                 call.respond(episode)
             }
 
-            route("/users/{id}") {
+            route("/users") {
                 get {
-                    val userId = call.validateUserId() ?: return@get
-                    if (!call.hasAccessToUser(userId)) return@get
+                    val principal = call.principal<JWTPrincipal>() ?: return@get
+                    val userId = principal.getUserId() ?: return@get call.respond(HttpStatusCode.Forbidden, errorResponse("🔒 Немає доступу"))
 
                     val user = userService.getUserById(userId)
                     if (user == null) call.respond(HttpStatusCode.NotFound, errorResponse("😕 Користувача не знайдено"))
@@ -141,8 +154,8 @@ fun Application.configureRouting(database: Database) {
                 }
 
                 patch {
-                    val userId = call.validateUserId() ?: return@patch
-                    if (!call.hasAccessToUser(userId)) return@patch
+                    val principal = call.principal<JWTPrincipal>() ?: return@patch
+                    val userId = principal.getUserId() ?: return@patch call.respond(HttpStatusCode.Forbidden, errorResponse("🔒 Немає доступу"))
 
                     val request = call.receive<UpdateUserRequest>()
                     val updated = userService.updateUser(userId, request.toExposedUser(userId))
@@ -152,16 +165,16 @@ fun Application.configureRouting(database: Database) {
                 }
 
                 get("/podcasts") {
-                    val userId = call.validateUserId() ?: return@get
-                    if (!call.hasAccessToUser(userId)) return@get
+                    val principal = call.principal<JWTPrincipal>() ?: return@get
+                    val userId = principal.getUserId() ?: return@get call.respond(HttpStatusCode.Forbidden, errorResponse("🔒 Немає доступу"))
 
                     val podcasts = podcastService.getByCreatorId(userId)
                     call.respond(podcasts)
                 }
 
                 get("/search") {
-                    val userId = call.validateUserId() ?: return@get
-                    if (!call.hasAccessToUser(userId)) return@get
+                    val principal = call.principal<JWTPrincipal>() ?: return@get
+                    val userId = principal.getUserId() ?: return@get call.respond(HttpStatusCode.Forbidden, errorResponse("🔒 Немає доступу"))
 
                     val query = call.request.queryParameters["query"]?.trim() ?: ""
                     if (query.isBlank()) {

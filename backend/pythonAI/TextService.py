@@ -42,7 +42,7 @@ def generate_image_caption(text: str, max_length: int = 70) -> str:
 
 def summarize_text(text: str) -> str:
     prompt = (
-        "Напиши максимально короткий (до 100 слів) опис українською, про що йдеться в наступному тексті:\n\n"
+        "Напиши максимально короткий (до 50 слів) опис українською, про що йдеться в наступному тексті:\n\n"
         f"{text}"
     )
     return generate_text(prompt=prompt, max_tokens=500)

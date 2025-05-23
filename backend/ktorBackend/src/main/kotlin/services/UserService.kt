@@ -23,13 +23,19 @@ class UserService(database: Database) {
         }
     }
 
-    suspend fun addUser(user: ExposedUser): Int = dbQuery {
-        Users.insertAndGetId {
-            it[email] = user.email
-            it[passwordHash] = user.passwordHash
-            it[displayName] = user.displayName
-        }.value
+    suspend fun addUser(user: ExposedUser): Int? = dbQuery {
+        val existingUser = Users.selectAll().where { Users.email eq user.email }.singleOrNull()
+        if (existingUser != null) {
+            null
+        } else {
+            Users.insertAndGetId {
+                it[displayName] = user.displayName
+                it[email] = user.email
+                it[passwordHash] = user.passwordHash
+            }.value
+        }
     }
+
 
     suspend fun getUserByEmail(email: String): ExposedUser? = dbQuery {
         Users.selectAll().where { Users.email eq email }

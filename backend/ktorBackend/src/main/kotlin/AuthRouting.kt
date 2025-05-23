@@ -25,10 +25,12 @@ fun Application.configureAuthRouting(database: Database) {
             post("/register") {
                 val request = call.receive<RegisterRequest>()
                 val hashed = BCrypt.hashpw(request.password, BCrypt.gensalt())
-                val id = userService.addUser(
-                    ExposedUser(0, request.email, hashed, request.displayName)
-                )
-                call.respond(HttpStatusCode.Created, mapOf("id" to id))
+                val id = userService.addUser(ExposedUser(0, request.email, hashed, request.displayName))
+                if (id == null) {
+                    call.respond(HttpStatusCode.Conflict, "User with this email already exists.")
+                } else {
+                    call.respond(HttpStatusCode.Created, mapOf("id" to id))
+                }
             }
 
             post("/login") {
