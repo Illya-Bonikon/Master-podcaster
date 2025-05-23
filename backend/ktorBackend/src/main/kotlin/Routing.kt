@@ -2,6 +2,9 @@ package com.example
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import com.example.services.GenerateAudioSummaryRequest
+import com.example.services.GenerateImageRequest
+import com.example.services.GenerateImageResponse
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
@@ -24,11 +27,15 @@ import kotlin.time.Duration.Companion.seconds
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.Database
 import org.slf4j.event.*
+import com.example.services.PythonAiService
 
 fun Application.configureRouting(database: Database) {
     configureAuthRouting(database)
 
+    val aiService = PythonAiService()
+
     routing {
+
         authenticate("auth-jwt") {
             get("/me/podcasts") {
                 val principal = call.principal<JWTPrincipal>()

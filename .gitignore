@@ -401,3 +401,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 backend/pythonAI/.venv/
+.env

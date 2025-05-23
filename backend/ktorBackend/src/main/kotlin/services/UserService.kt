@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class UserService(database: Database) {
 
@@ -18,12 +19,7 @@ class UserService(database: Database) {
 
     suspend fun getAllUsers(): List<ExposedUser> = dbQuery {
         Users.selectAll().map {
-            ExposedUser(
-                id = it[Users.id].value,
-                email = it[Users.email],
-                passwordHash = it[Users.passwordHash],
-                displayName = it[Users.displayName]
-            )
+            it.toExposedUser()
         }
     }
 
@@ -36,17 +32,35 @@ class UserService(database: Database) {
     }
 
     suspend fun getUserByEmail(email: String): ExposedUser? = dbQuery {
-        Users.select { Users.email eq email }
-            .map {
-                ExposedUser(
-                    id = it[Users.id].value,
-                    email = it[Users.email],
-                    passwordHash = it[Users.passwordHash],
-                    displayName = it[Users.displayName]
-                )
-            }
+        Users.selectAll().where { Users.email eq email }
+            .map { it.toExposedUser() }
             .singleOrNull()
     }
+
+    suspend fun getUserById(id: Int): ExposedUser? = dbQuery {
+        Users.selectAll().where { Users.id eq id }
+            .map { it.toExposedUser() }
+            .singleOrNull()
+    }
+
+    suspend fun updateUser(id: Int, updatedUser: ExposedUser): Boolean = dbQuery {
+        Users.update({ Users.id eq id }) {
+            it[email] = updatedUser.email
+            it[passwordHash] = updatedUser.passwordHash
+            it[displayName] = updatedUser.displayName
+        } > 0
+    }
+
+    suspend fun deleteUser(id: Int): Boolean = dbQuery {
+        Users.deleteWhere { Users.id eq id } > 0
+    }
+
+    private fun ResultRow.toExposedUser() = ExposedUser(
+        id = this[Users.id].value,
+        email = this[Users.email],
+        passwordHash = this[Users.passwordHash],
+        displayName = this[Users.displayName]
+    )
 
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
