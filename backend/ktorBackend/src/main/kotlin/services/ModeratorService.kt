@@ -21,7 +21,8 @@ class ModeratorService(private val database: Database) {
                 ExposedModerator(
                     id = it[Moderators.id].value,
                     email = it[Moderators.email],
-                    passwordHash = it[Moderators.passwordHash]
+                    passwordHash = it[Moderators.passwordHash],
+                    displayName = it[Moderators.displayName]
                 )
             }
             .singleOrNull()

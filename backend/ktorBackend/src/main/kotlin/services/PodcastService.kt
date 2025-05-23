@@ -8,6 +8,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 
 class PodcastService(database: Database) {
     init {
@@ -64,6 +65,15 @@ class PodcastService(database: Database) {
         imagePath = this[Podcasts.imagePath],
         creatorId = this[Podcasts.creatorId].value
     )
+
+    suspend fun searchPublicPodcasts(query: String): List<ExposedPodcast> = dbQuery {
+        Podcasts.selectAll().where {
+            (Podcasts.isPublic eq true) and
+                    ((Podcasts.title like "%$query%") or (Podcasts.prompt like "%$query%"))
+        }.map { it.toExposedPodcast() }
+    }
+
+
 
     private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }

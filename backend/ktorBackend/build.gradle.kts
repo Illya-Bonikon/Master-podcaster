@@ -48,6 +48,7 @@ dependencies {
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
     testImplementation("com.h2database:h2:2.2.224")
+    testImplementation("io.mockk:mockk:1.13.10")
 
     implementation("org.mindrot:jbcrypt:0.4")
 }
