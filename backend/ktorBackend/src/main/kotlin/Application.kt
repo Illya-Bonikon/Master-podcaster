@@ -12,4 +12,5 @@ fun Application.module() {
     configureSecurity()
     val database = configureDatabases()
     configureRouting(database)
+    configureFileRouting()
 }

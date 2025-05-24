@@ -147,6 +147,18 @@ fun Application.configureRouting(database: Database) {
                     else call.respond(HttpStatusCode.NotFound, errorResponse("😕 Користувача не знайдено"))
                 }
 
+                get("/all") {
+                    val principal = call.principal<JWTPrincipal>() ?: return@get
+                    val role = principal.getRole()
+                    if (role != "moderator") {
+                        call.respond(HttpStatusCode.Forbidden, errorResponse("🛡 Доступ лише для модераторів"))
+                        return@get
+                    }
+
+                    val users = userService.getAllUsers()
+                    call.respond(users)
+                }
+
                 get("/podcasts") {
                     val principal = call.principal<JWTPrincipal>() ?: return@get
                     val userId = principal.getUserId() ?: return@get call.respond(HttpStatusCode.Forbidden, errorResponse("🔒 Немає доступу"))
@@ -191,10 +203,8 @@ fun Application.configureRouting(database: Database) {
 
             delete("/podcasts/{id}") {
                 val principal = call.principal<JWTPrincipal>() ?: return@delete
-                if (principal.getRole() != "moderator") {
-                    call.respond(HttpStatusCode.Forbidden, errorResponse("🛡 Доступ лише для модераторів"))
-                    return@delete
-                }
+                val userId = principal.getUserId() ?: return@delete
+                val userRole = principal.getRole()
 
                 val podcastId = call.parameters["id"]?.toIntOrNull()
                 if (podcastId == null) {
@@ -202,9 +212,23 @@ fun Application.configureRouting(database: Database) {
                     return@delete
                 }
 
+                val podcast = podcastService.getById(podcastId)
+                if (podcast == null) {
+                    call.respond(HttpStatusCode.NotFound, errorResponse("Подкаст не знайдено"))
+                    return@delete
+                }
+
+                if (podcast.creatorId != userId && userRole != "moderator") {
+                    call.respond(HttpStatusCode.Forbidden, errorResponse("🛡 Ви не маєте прав на видалення цього подкасту"))
+                    return@delete
+                }
+
                 val deleted = podcastService.delete(podcastId)
-                if (deleted) call.respond(HttpStatusCode.OK, successResponse("Подкаст видалено"))
-                else call.respond(HttpStatusCode.NotFound, errorResponse("Подкаст не знайдено"))
+                if (deleted) {
+                    call.respond(HttpStatusCode.OK, successResponse("✅ Подкаст видалено"))
+                } else {
+                    call.respond(HttpStatusCode.InternalServerError, errorResponse("❌ Не вдалося видалити подкаст"))
+                }
             }
         }
     }

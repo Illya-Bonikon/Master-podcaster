@@ -22,7 +22,7 @@ def generate_image_route():
         image_path = generate_image(image_caption)
 
     return jsonify({
-        "image_path": image_path
+        "imagePath": image_path
     })
 
 @app.route('/generate-audio-summary', methods=['POST'])
@@ -39,7 +39,7 @@ def generate_audio_summary_route():
 
     return jsonify({
         "summary": summary,
-        "audio_path": audio_path
+        "audioPath": audio_path
     })
 
 if __name__ == "__main__":

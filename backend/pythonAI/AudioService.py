@@ -8,8 +8,10 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 tts = TTS("tts_models/uk/mai/vits", gpu=True)
 print(f"Using device: {device}")
 
-OUTPUT_DIR = "D:\kpi\Master-podcaster\\backend\media\\audio"
+OUTPUT_DIR = r"D:\kpi\Master-podcaster\backend\media\audio"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+BASE_MEDIA_PATH = r"D:\kpi\Master-podcaster\backend\media"
 
 def synthesize_audio(text: str) -> str:
     print(f"Generating audio for text: {text}")
@@ -20,4 +22,6 @@ def synthesize_audio(text: str) -> str:
     tts.tts_to_file(text=text, file_path=file_path)
     print(f"Audio saved: {file_path}")
 
-    return file_path
+    relative_path = os.path.relpath(file_path, BASE_MEDIA_PATH)
+    url_path = f"/media/{relative_path.replace(os.sep, '/')}"
+    return url_path
