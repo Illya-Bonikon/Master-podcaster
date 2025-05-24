@@ -1,4 +1,5 @@
 .layout {
+	width: 100%;
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
@@ -8,9 +9,26 @@
 }
 
 .main {
-	flex: 1 1 auto;
+	min-height: 0;
 	padding: 2rem 0 2rem 0;
-	max-width: 900px;
-	margin: 0 auto;
-	width: 100%;
+	width: 100vw;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	flex: 1 1 100%;
+	overflow-x: hidden;
+
+
+}
+
+
+
+
+@media (min-width: 900px) {
+	.main > * {
+		margin-left: auto;
+		margin-right: auto;
+	}
 } 

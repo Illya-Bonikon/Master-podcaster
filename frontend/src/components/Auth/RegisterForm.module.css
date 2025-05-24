@@ -1,13 +1,17 @@
+
 .form {
 	max-width: 350px;
 	margin: 2rem auto;
 	padding: 2rem;
-	background: var(--color-bg-light);
 	border-radius: var(--border-radius);
+	border: 1px solid var(--color-primary);
 	box-shadow: var(--shadow-sm);
+	backdrop-filter: blur(8px);
 	display: flex;
 	flex-direction: column;
-	gap: 1.2rem;
+	gap: 1.05rem;
+	align-items: center;
+	justify-content: center;
 }
 
 .title {
@@ -27,8 +31,7 @@ input {
 	border-radius: var(--border-radius);
 	border: 1px solid #ccc;
 	font-size: 1em;
-	background: var(--input-bg, var(--color-bg-light));
-	color: var(--color-text);
+	color: var(--color-text, #213547);
 }
 
 .button {
@@ -49,10 +52,3 @@ input {
 	color: var(--color-danger);
 	font-size: 0.95em;
 }
-
-:root {
-  	--input-bg: var(--color-bg-light);
-}
-[data-theme="dark"] {
-  	--input-bg: #232323;
-} 

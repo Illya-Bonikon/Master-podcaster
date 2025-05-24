@@ -20,11 +20,6 @@ const EpisodeCreateForm = ({ onSubmit }) => {
 				<textarea {...register('description', { required: 'Введіть опис' })} />
 				{errors.description && <span className={styles.error}>{errors.description.message}</span>}
 			</div>
-			
-
-			
-			{/* TODO подумати чи мають бути додаткові поля  */}
-
 
 
 			<button className={styles.button} type="submit">Створити</button>

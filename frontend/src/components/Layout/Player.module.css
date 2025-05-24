@@ -2,14 +2,14 @@
 	position: fixed;
 	bottom: 0;
 	width: 100%;
-	background: var(--color-bg-light);
-	box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.07);
+	background: transparent;
+	backdrop-filter: blur(5px);
+	box-shadow: 0 -2px 8px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.6);
 	z-index: 100;
 	padding: 0;
 	height: auto;
 	box-sizing: border-box;
 }
-
 .progressBar {
 	padding: 0;
 	margin: 0;
@@ -18,13 +18,12 @@
 	left: 0;
 	width: 100%;
 	height: 4px;
-	background: transparent;
+	border: none;
 	border-radius: 0;
 	outline: none;
 	cursor: pointer;
 	-webkit-appearance: none;
 	appearance: none;
-
 	background-image: linear-gradient(
 		to right,
 		var(--color-primary-hover) 0%,
@@ -32,7 +31,6 @@
 		#b0b0b0 var(--progress-percent),
 		#b0b0b0 100%
 	);
-
 	transition: height 0.2s;
 	z-index: 2;
 }
@@ -43,11 +41,12 @@
 
 .progressBar::-webkit-slider-runnable-track {
 	height: 4px;
-	background: transparent;
 	border-radius: 0;
+	border: none;
 }
 
 .progressBar::-webkit-slider-thumb {
+	background: none;
 	-webkit-appearance: none;
 	appearance: none;
 	width: 12px;
@@ -57,6 +56,7 @@
 	margin-top: -4px;
 	transition: width 0.2s, height 0.2s, margin-top 0.2s, background 0.2s;
 	cursor: pointer;
+	border: none;
 }
 
 .progressBar:hover::-webkit-slider-thumb {
@@ -70,6 +70,7 @@
 	height: 4px;
 	background: transparent;
 	border-radius: 0;
+	border: none;
 }
 
 .progressBar::-moz-range-thumb {
@@ -79,6 +80,7 @@
 	border-radius: 50%;
 	cursor: pointer;
 	transition: width 0.2s, height 0.2s, background 0.2s;
+	border: none;
 }
 
 .progressBar:hover::-moz-range-thumb {
@@ -87,8 +89,35 @@
 	background: var(--color-primary);
 }
 
-.progressBar:hover::-moz-range-track {
-  	height: 8px;
+.progressBar::-ms-fill-lower {
+	background: var(--color-primary-hover);
+	border: none;
+}
+.progressBar::-ms-fill-upper {
+	background: #b0b0b0;
+	border: none;
+}
+
+.progressBar:focus {
+	outline: none;
+}
+
+.progressBar::-ms-thumb {
+	width: 12px;
+	height: 12px;
+	background: var(--color-primary-hover);
+	border-radius: 50%;
+	border: none;
+}
+
+.progressBar:hover::-ms-thumb {
+	width: 18px;
+	height: 18px;
+	background: var(--color-primary);
+}
+
+.progressBar::-ms-tooltip {
+	display: none;
 }
 
 .player {
@@ -151,7 +180,7 @@
 }
 
 .controlBtn {
-	background: var(--color-primary-hover);
+	background: var(--color-primary);
 	color: #fff;
 	border: none;
 	border-radius: 50%;
@@ -166,7 +195,7 @@
 }
 
 .controlBtn:hover {
-  	background: var(--color-primary-hover);
+  background: var(--color-primary-hover);
 }
 
 .volumeIcon {
@@ -215,7 +244,7 @@
 }
 
 .volume:hover::-webkit-slider-thumb {
-  	background: var(--color-primary-hover);
+  background: var(--color-primary-hover);
 }
 
 .volume::-moz-range-track {
@@ -240,12 +269,9 @@
 }
 
 .volume:hover::-moz-range-thumb {
-  	background: var(--color-primary-hover);
+  background: var(--color-primary-hover);
 }
 
-.volume:hover {
-  	background-color: var(--color-bg);
-}
 
 @media (max-width: 768px) {
 	.wrapper {
@@ -296,7 +322,9 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-
+	.time {
+		display: none;
+	}
 	.left,
 	.right {
 		display: flex;

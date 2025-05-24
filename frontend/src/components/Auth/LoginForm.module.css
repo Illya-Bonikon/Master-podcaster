@@ -1,13 +1,18 @@
+/* .form дублюється у багатьох модулях і буде винесена у common.module.css */
+
 .form {
 	max-width: 350px;
 	margin: 2rem auto;
 	padding: 2rem;
-	background: var(--color-bg-light);
 	border-radius: var(--border-radius);
+	border: 1px solid var(--color-primary);
 	box-shadow: var(--shadow-sm);
+	backdrop-filter: blur(8px);
 	display: flex;
 	flex-direction: column;
-	gap: 1.2rem;
+	gap: 1.05rem;
+	align-items: center;
+	justify-content: center;
 }
 
 .title {
@@ -22,37 +27,19 @@
 	gap: 0.3rem;
 }
 
-input {
-	padding: 0.6em 1em;
-	border-radius: var(--border-radius);
-	border: 1px solid #ccc;
-	font-size: 1em;
-	background: var(--input-bg, var(--color-bg-light));
-	color: var(--color-text);
-}
-
-.button {
-	background: var(--color-primary);
-	color: #fff;
-	border: none;
-	border-radius: var(--border-radius);
-	padding: 0.7em 1.2em;
-	font-size: 1em;
-	cursor: pointer;
-	transition: background 0.2s;
-}
-.button:hover {
- 	 background: var(--color-primary-hover);
-}
-
-.error {
-	color: var(--color-danger);
-	font-size: 0.95em;
-}
+/* input, .button, .button:hover, .error дублюються у багатьох модулях і будуть винесені у common.module.css */
 
 :root {
 	--input-bg: var(--color-bg-light);
+	--color-bg-light: #181818;
+	--color-text: #f5f5f5;
+	--color-primary: #7c4dff;
+	--color-primary-hover: #651fff;
 }
 [data-theme="dark"] {
 	--input-bg: #232323;
+	--color-bg-light: #181818;
+	--color-text: #f5f5f5;
+	--color-primary: #7c4dff;
+	--color-primary-hover: #651fff;
 } 

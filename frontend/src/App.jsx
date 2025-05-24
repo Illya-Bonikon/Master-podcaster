@@ -7,15 +7,24 @@ import LoginForm from "./components/Auth/LoginForm";
 import RegisterForm from "./components/Auth/RegisterForm";
 import LibraryPage from "./components/Library/LibraryPage";
 import ProfilePage from "./components/Profile/ProfilePage";
-import PodcastList from "./components/Podcast/PodcastList";
 import PodcastCreateForm from "./components/Podcast/PodcastCreateForm";
 import PodcastDetails from "./components/Podcast/PodcastDetails";
 import EpisodeCreateForm from "./components/Episode/EpisodeCreateForm";
-import SearchPage from "./components/Search/SearchPage";
 import WelcomePage from './components/WelcomePage';
+import GlobalPodcasts from './components/Podcast/GlobalPodcasts';
+import AboutTeam from './components/Profile/AboutTeam';
+import { UserProvider } from './components/UserContext.jsx';
+import { PlayerProvider } from './components/Layout/PlayerContext.jsx';
+import SearchPage from './components/SearchPage';
+import UsersModal from './components/Layout/UsersModal';
+import { useContext } from 'react';
+import { UserContext } from './components/UserContext.jsx';
 
 function App() {
+	const { isModerator } = useContext(UserContext);
 	return (
+		<UserProvider>
+		<PlayerProvider>
 		<Router>
 		<BackgroundWaves />
 		<div style={{ position: 'relative', zIndex: 1 }}>
@@ -30,19 +39,23 @@ function App() {
 				<RegisterForm onSubmit={data => alert(JSON.stringify(data))} />
 				</AuthLayout>
 			} />
-			<Route path="/" element={<WelcomePage />} />
-			<Route path="/podcasts" element={<MainLayout><PodcastList /></MainLayout>} />
-			<Route path="/library" element={<MainLayout><LibraryPage /></MainLayout>} />
-			<Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-			<Route path="/search" element={<MainLayout><SearchPage /></MainLayout>} />
-			<Route path="/podcast/create" element={<MainLayout><PodcastCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />
-			<Route path="/podcast/:id" element={<MainLayout><PodcastDetails /></MainLayout>} />
-			<Route path="/episode/create/:podcastId" element={<MainLayout><EpisodeCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />
+			<Route path="/" element={<AuthLayout><WelcomePage /></AuthLayout>} />
+			{!isModerator && <Route path="/library" element={<MainLayout><LibraryPage /></MainLayout>} />}
+			{!isModerator && <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />}
+			{!isModerator && <Route path="/podcast/create" element={<MainLayout><PodcastCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />}
+			{!isModerator && <Route path="/podcast/:id" element={<MainLayout><PodcastDetails /></MainLayout>} />}
+			{!isModerator && <Route path="/podcast/:podcastId/episode/create" element={<MainLayout><EpisodeCreateForm onSubmit={data => alert(JSON.stringify(data))} /></MainLayout>} />}
+			{!isModerator && <Route path="/global" element={<MainLayout><GlobalPodcasts /></MainLayout>} />}
+			{!isModerator && <Route path="/about" element={<MainLayout><AboutTeam /></MainLayout>} />}
+			<Route path="/searchpage" element={<MainLayout><SearchPage /></MainLayout>} />
+			<Route path="/users" element={<MainLayout><UsersModal asPage={true} /></MainLayout>} />
 			{/* 404 */}
 			<Route path="*" element={<div style={{textAlign: 'center', marginTop: '3rem'}}>Сторінка не знайдена</div>} />
 			</Routes>
 		</div>
 		</Router>
+		</PlayerProvider>
+		</UserProvider>
 	);
 }
 

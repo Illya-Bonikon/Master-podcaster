@@ -24,7 +24,7 @@ const BackgroundWaves = () => {
 
 			setBars((prevBars) =>
 				prevBars.map((height, i) =>
-				lerp(height, targetHeightsRef.current[i], 0.0) 
+				lerp(height, targetHeightsRef.current[i], 0.6) 
 				)
 			);
 

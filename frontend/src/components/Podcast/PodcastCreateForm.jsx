@@ -1,15 +1,20 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import styles from './PodcastCreateForm.module.css';
 
 
-// TODO: обговорити з Миколою поля, мб подумавти про їх валідацію
-
 const PodcastCreateForm = ({ onSubmit }) => {
+	const navigate = useNavigate();
 	const { register, handleSubmit, formState: { errors } } = useForm();
 
+	const handleFormSubmit = async (data) => {
+		if (onSubmit) await onSubmit(data);
+		navigate(`/podcast/123`);
+	};
+
 	return (
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+		<form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
 		
 			<h2 className={styles.title}>Створити подкаст</h2>
 			
@@ -18,17 +23,13 @@ const PodcastCreateForm = ({ onSubmit }) => {
 				<input {...register('title', { required: 'Введіть назву' })} />
 				{errors.title && <span className={styles.error}>{errors.title.message}</span>}
 			</div>
-			
+
 			<div className={styles.field}>
-				<label>Опис</label>
-				<textarea {...register('description', { required: 'Введіть опис' })} />
+				<label>Промпт (опис)</label>
+				<textarea {...register('description', { required: 'Введіть опис' })} placeholder="Опишіть ідею подкасту..." />
 				{errors.description && <span className={styles.error}>{errors.description.message}</span>}
 			</div>
 			
-			<div className={styles.field}>
-				<label>Теги (через кому)</label>
-				<input {...register('tags')} />
-			</div>
 			
 			<div className={styles.field}>
 				<label>Видимість</label>
@@ -36,11 +37,6 @@ const PodcastCreateForm = ({ onSubmit }) => {
 					<option value="public">Публічний</option>
 					<option value="private">Приватний</option>
 				</select>
-			</div>
-			
-			<div className={styles.field}>
-				<label>Обкладинка (URL або файл)</label>
-				<input type="file" {...register('coverFile')} />
 			</div>
 			
 			<button className={styles.button} type="submit">Створити</button>
