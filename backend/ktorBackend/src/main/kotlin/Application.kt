@@ -11,7 +11,6 @@ fun Application.module() {
     configureSerialization()
     configureHTTP()
     configureSecurity()
-    val database = configureDatabases()
-    configureRouting(database)
+    configureRouting(configureDatabases())
     configureFileRouting()
 }
