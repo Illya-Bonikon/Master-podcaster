@@ -399,3 +399,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+backend/pythonAI/.venv/
+.env
+backend/ktorBackend/src/main/kotlin/config/config.kt
