@@ -12,6 +12,7 @@ fun Application.configureHTTP() {
     }
     install(Compression)
     install(CORS) {
+        anyHost()
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
@@ -20,6 +21,7 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Post)
 
         allowHeader(HttpHeaders.Authorization)
+        allowHeader("ngrok-skip-browser-warning")
         allowHeader(HttpHeaders.ContentType)
         allowHeader(HttpHeaders.Accept)
 

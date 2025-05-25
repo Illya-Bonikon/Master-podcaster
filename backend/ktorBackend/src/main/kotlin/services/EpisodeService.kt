@@ -1,6 +1,5 @@
 package com.example.services
 
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import com.example.models.domain.Episodes
 import com.example.models.domain.ExposedEpisode
 import kotlinx.coroutines.Dispatchers
@@ -33,17 +32,6 @@ class EpisodeService(database: Database) {
             it[summary] = episode.summary
             it[audioPath] = episode.audioPath
         }.value
-    }
-
-    suspend fun update(id: Int, episode: ExposedEpisode): Boolean = dbQuery {
-        Episodes.update({ Episodes.id eq id }) {
-            it[summary] = episode.summary
-            it[audioPath] = episode.audioPath
-        } > 0
-    }
-
-    suspend fun delete(id: Int): Boolean = dbQuery {
-        Episodes.deleteWhere { Episodes.id eq id } > 0
     }
 
     private fun ResultRow.toExposedEpisode() = ExposedEpisode(

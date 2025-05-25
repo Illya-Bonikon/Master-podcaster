@@ -68,6 +68,30 @@ fun Application.configureRouting(database: Database) {
                     call.respond(HttpStatusCode.Created, mapOf("id" to podcastId))
                 }
 
+                get("/{id}") {
+                    val id = call.parameters["id"]?.toIntOrNull()
+                        ?: return@get call.respond(HttpStatusCode.BadRequest, errorResponse("Invalid podcast ID"))
+
+                    val podcast = podcastService.getById(id)
+                        ?: return@get call.respond(HttpStatusCode.NotFound, errorResponse("Podcast not found"))
+
+                    if (podcast.isPublic) {
+                        call.respond(podcast)
+                    } else {
+                        val principal = call.principal<JWTPrincipal>()
+                        if (principal == null) {
+                            call.respond(HttpStatusCode.Unauthorized, errorResponse("Unauthorized - login required"))
+                            return@get
+                        }
+                        val userId = principal.getUserId()
+                        if (userId == null || userId != podcast.creatorId) {
+                            call.respond(HttpStatusCode.Forbidden, errorResponse("Forbidden - you are not the creator"))
+                            return@get
+                        }
+                        call.respond(podcast)
+                    }
+                }
+
                 patch("/{id}") {
                     val principal = call.principal<JWTPrincipal>() ?: return@patch
                     val userId = principal.getUserId() ?: return@patch
@@ -202,9 +226,19 @@ fun Application.configureRouting(database: Database) {
             }
 
             delete("/podcasts/{id}") {
-                val principal = call.principal<JWTPrincipal>() ?: return@delete
-                val userId = principal.getUserId() ?: return@delete
+                val principal = call.principal<JWTPrincipal>()
+                if (principal == null) {
+                    call.respond(HttpStatusCode.Unauthorized, errorResponse("Неавторизований"))
+                    return@delete
+                }
+
                 val userRole = principal.getRole()
+                val userId = principal.getUserId()
+
+                if (userRole != "moderator" && userId == null) {
+                    call.respond(HttpStatusCode.Unauthorized, errorResponse("Немає userId у токені"))
+                    return@delete
+                }
 
                 val podcastId = call.parameters["id"]?.toIntOrNull()
                 if (podcastId == null) {
@@ -218,7 +252,7 @@ fun Application.configureRouting(database: Database) {
                     return@delete
                 }
 
-                if (podcast.creatorId != userId && userRole != "moderator") {
+                if (userRole != "moderator" && podcast.creatorId != userId) {
                     call.respond(HttpStatusCode.Forbidden, errorResponse("🛡 Ви не маєте прав на видалення цього подкасту"))
                     return@delete
                 }
@@ -229,6 +263,7 @@ fun Application.configureRouting(database: Database) {
                 } else {
                     call.respond(HttpStatusCode.InternalServerError, errorResponse("❌ Не вдалося видалити подкаст"))
                 }
+
             }
         }
     }
