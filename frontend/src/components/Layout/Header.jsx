@@ -99,9 +99,23 @@ const Header = () => {
 						</>
 					)}
 					{isModerator && (
-						<button className={styles.iconBtn + ' ' + styles.desktopOnly} onClick={() => navigate('/users')} title="Користувачі">
-							<FaUsers className={styles.icon} />
-						</button>
+						<>
+							<button className={styles.iconBtn + ' ' + styles.desktopOnly} onClick={() => navigate('/users')} title="Користувачі">
+								<FaUsers className={styles.icon} />
+							</button>
+							<button
+								className={"" + (styles.iconBtn || "") + " " + (styles.desktopOnly || "") + " " + (styles.logoutBtn || "")}
+								style={{ marginLeft: 12, background: 'var(--color-danger, #e74c3c)', color: '#fff', borderRadius: 8, padding: '0.5em 1.2em', fontWeight: 600 }}
+								onClick={() => {
+									if (window.confirm('Ви дійсно бажаєте вийти з акаунту?')) {
+										localStorage.removeItem('token');
+										window.location.href = '/';
+									}
+								}}
+							>
+								Вийти
+							</button>
+						</>
 					)}
 					<div className={styles.theme}>
 						<input

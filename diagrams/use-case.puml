@@ -7,20 +7,29 @@ actor Moderator
 actor AI_System as AI
 
 rectangle "Podcast App" {
-	User ---> (Change Podcast visability)
+
 	User ---> (Register/Login)
 	User ---> (Browse Podcasts)
 	User ---> (Search Podcasts)
+	User ---> (Sort Podcasts)
+	User ---> (View Podcast Details)
 	User ---> (Change personal information)
 	User ---> (Load Podcast)
 	User ---> (Create Podcast)
+	User ---> (Delete Podcast)
+	User ---> (View info about team)
 	User ---> (Generate Episode)
-	User ---> (Change Episode prompt)
 	User ---> (Listen to Episode)
 
-	(Generate Episode) ---> AI : Send prompt
-	AI ---> (Generate Episode) : Return text+audio
 
+	(Generate Episode) ---> AI : Send prompt
+	AI ---> (Generate Episode) : Return text
+
+	(Generate Podcast logo) ---> AI : Send prompt
+	AI ---> (Generate Podcast logo) : Return image
+
+	(Generate audio) ---> AI : Send prompt
+	AI ---> (Generate audio) : Return audio
 
 	Moderator ---> (Ban User)
 	Moderator ---> (Delete Podcast)

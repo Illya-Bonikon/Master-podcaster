@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "jwt-decode",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.76.1",
     "howler": "^2.2.4",
+    "jwt-decode": "^4.0.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.56.4",
@@ -31,5 +32,9 @@
     "globals": "^16.0.0",
     "sass": "^1.89.0",
     "vite": "^6.3.5"
-  }
+  },
+  "description": "- Встановити залежності\r \t```\r \t\tcd frontend\r \t\tnpm install\r \t```\r - Запустити програму\r \t```\r \t\tnpm run dev\r \t```",
+  "main": "eslint.config.js",
+  "author": "",
+  "license": "ISC"
 }

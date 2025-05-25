@@ -2,30 +2,48 @@
 actor User
 participant "Frontend (React)" as FE
 participant "Backend (Kotlin API)" as BE
-participant "OpenAPI" as AI
+participant "AI System" as AI
 database "MySQL DB" as DB
 
 User -> FE: Login/Register
-FE -> BE: Authenticate User
-BE --> FE: Auth Success
+FE -> BE: Надіслати дані для авторизації
+BE --> FE: Токен/статус
 
-User -> FE: Create Podcast (title, tags, etc.)
-FE -> BE: Save Podcast data
-BE -> DB: Insert Podcast record
-DB --> BE: Podcast ID
-BE --> FE: Podcast Created with ID
+== Робота з подкастами ==
 
-User -> FE: Enter Episode Prompt
-FE -> BE: Send prompt for episode generation
-BE -> AI: Generate episode text (prompt)
-AI --> BE: Episode text
-BE -> AI: Convert text to audio
-AI --> BE: Audio file URL or data
+User -> FE: Створити подкаст
+FE -> BE: Надіслати дані подкасту
+BE -> DB: Додати подкаст
+DB --> BE: ID подкасту
+BE --> FE: ID подкасту
 
-BE -> DB: Save Episode (text + audio + metadata)
-DB --> BE: Episode saved
-BE --> FE: Episode created with details
+User -> FE: Задати промпт епізоду
+FE -> BE: Надіслати промпт
+BE -> AI: Згенерувати текст епізоду
+AI --> BE: Текст епізоду
+BE -> AI: Згенерувати аудіо
+AI --> BE: Аудіо
 
-FE --> User: Show Episode info
+BE -> DB: Зберегти епізод
+DB --> BE: Підтвердження
+BE --> FE: Деталі епізоду
+
+FE --> User: Відобразити епізод
+
+== Перегляд та редагування ==
+
+User -> FE: Пошук/перегляд подкастів
+FE -> BE: Запитати дані
+BE -> DB: Отримати дані
+DB --> BE: Дані
+BE --> FE: Дані
+FE --> User: Відобразити
+
+User -> FE: Редагувати/видалити подкаст або профіль
+FE -> BE: Надіслати зміни/запит на видалення
+BE -> DB: Оновити/видалити
+DB --> BE: Підтвердження
+BE --> FE: Статус
+FE --> User: Оновити інтерфейс
 
 @enduml

@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { FaTimes, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import styles from './UsersModal.module.css';
+import { getUsers } from '../../api';
+import { useEffect } from 'react';
 
-const mockUsers = [
-	{ id: 1, name: 'Ілля', email: 'illya@email.com' },
-	{ id: 2, name: 'Микола', email: 'mykola@email.com' },
-	{ id: 3, name: 'Олена', email: 'olena@email.com' },
-	{ id: 4, name: 'Анна', email: 'anna@email.com' },
-	{ id: 5, name: 'Петро', email: 'petro@email.com' },
-];
 
 const UsersModal = ({ onClose, asPage }) => {
 	const [search, setSearch] = useState('');
-	const [users, setUsers] = useState(mockUsers);
+	const [users, setUsers] = useState([]);
 	const navigate = useNavigate();
+	const token = localStorage.getItem('token');
+
+	useEffect(() => {
+		getUsers(token).then(res => setUsers(res.data)).catch(e => console.error(e));
+	}, []);
 
 	const filtered = users.filter(u =>
 		u.name.toLowerCase().includes(search.toLowerCase()) ||

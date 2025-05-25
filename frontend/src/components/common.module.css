@@ -97,6 +97,7 @@ h2 {
 
 .card {
 	
+	min-width: 300px;
 	background: transparent;
 	box-shadow: var(--shadow-sm);
 	backdrop-filter: blur(8px);

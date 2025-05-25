@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import BackgroundWaves from "./components/Layout/BackgroundWaves";
 import MainLayout from "./components/Layout/MainLayout";
 import AuthLayout from "./components/Layout/AuthLayout";
@@ -17,16 +17,31 @@ import { UserProvider } from './components/UserContext.jsx';
 import { PlayerProvider } from './components/Layout/PlayerContext.jsx';
 import SearchPage from './components/SearchPage';
 import UsersModal from './components/Layout/UsersModal';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { UserContext } from './components/UserContext.jsx';
+import ErrorBoundary from './ErrorBoundary';
+import ErrorFallback from './ErrorFallback';
 
 function App() {
 	const { isModerator } = useContext(UserContext);
+
+	function ModeratorRedirect() {
+		const navigate = useNavigate();
+		const location = useLocation();
+		useEffect(() => {
+			if (isModerator && location.pathname === '/') 
+				navigate('/users', { replace: true });
+		}, [isModerator, location.pathname, navigate]);
+		return null;
+	}
+
 	return (
+		<ErrorBoundary FallbackComponent={ErrorFallback}>
 		<UserProvider>
 		<PlayerProvider>
 		<Router>
 		<BackgroundWaves />
+		<ModeratorRedirect />
 		<div style={{ position: 'relative', zIndex: 1 }}>
 			<Routes>
 			<Route path="/login" element={
@@ -56,6 +71,7 @@ function App() {
 		</Router>
 		</PlayerProvider>
 		</UserProvider>
+		</ErrorBoundary>
 	);
 }
 

@@ -1,19 +1,37 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './EpisodeCreateForm.module.css';
+import { createEpisode } from '../../api';
+import { useNavigate, useParams } from 'react-router-dom';
+import LoadingOverlay from '../LoadingOverlay';
 
-const EpisodeCreateForm = ({ onSubmit }) => {
+const EpisodeCreateForm = ({ podcastId: propPodcastId }) => {
+  const { podcastId: paramPodcastId } = useParams();
+  const podcastId = propPodcastId || paramPodcastId;
+  const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
+  const [loading, setLoading] = React.useState(false);
+
+  const handleCreate = async (data) => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const payload = { prompt: data.description };
+      const res = await createEpisode(podcastId, payload, token);
+      alert('Епізод створено!');
+      navigate(`/podcast/${podcastId}`);
+    } catch (e) {
+      alert('Помилка створення епізоду: ' + (e.response?.data?.message || e.message));
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <>
+      {loading && <LoadingOverlay message="Генеруємо епізод. Це може зайняти до хвилини..." />}
+      <form className={styles.form} onSubmit={handleSubmit(handleCreate)}>
 			<h2 className={styles.title}>Створити епізод</h2>
-			
-			<div className={styles.field}>
-				<label>Назва</label>
-				<input {...register('title', { required: 'Введіть назву' })} />
-				{errors.title && <span className={styles.error}>{errors.title.message}</span>}
-			</div>
 			
 			<div className={styles.field}>
 				<label>Опис</label>
@@ -24,6 +42,7 @@ const EpisodeCreateForm = ({ onSubmit }) => {
 
 			<button className={styles.button} type="submit">Створити</button>
 		</form>
+    </>
   );	
 };
 

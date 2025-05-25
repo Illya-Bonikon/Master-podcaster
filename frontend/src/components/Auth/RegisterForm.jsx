@@ -3,15 +3,27 @@ import { useForm } from 'react-hook-form';
 import styles from './RegisterForm.module.css';
 import common from '../common.module.css';
 import { useNavigate } from 'react-router-dom';
+import { registerAPI } from '../../api';
 
 const RegisterForm = ({ onSubmit }) => {
 	const navigate = useNavigate();
 	const { register, handleSubmit, watch, formState: { errors } } = useForm();
 	const password = watch('password');
 
-	const handleRegister = data => {
-		onSubmit(data);
-		navigate('/podcasts');
+	const handleRegister = async data => {
+		try {
+			const restructureData = {
+				email: data.email,
+				password: data.password,
+				displayName: data.name
+			}
+			console.log(restructureData);
+			await registerAPI(restructureData);
+			alert('Реєстрація успішна! Тепер увійдіть.');
+			navigate('/login');
+		} catch (e) {
+			alert('Помилка реєстрації: ' + (e.response?.data?.message || e.message));
+		}
 	};
 
 	return (

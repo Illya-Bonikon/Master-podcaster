@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './LibraryPage.module.css';
 import common from '../common.module.css';
 import PodcastCard from '../Podcast/PodcastCard';
+import { deletePodcast, getMyPodcasts } from '../../api';
+import { useNavigate } from 'react-router-dom';
 
 const LibraryPage = () => {
+	const navigate = useNavigate();
+	const [podcasts, setPodcasts] = useState([]);
 
+	const token = localStorage.getItem('token');
 
-	const podcasts = [
-		{ id: 1, title: 'Мій перший подкаст', episodes: [ { title: 'Перший епізод' }, { title: 'Другий епізод' } ] },
-		{ id: 2, title: 'Ще один подкаст', episodes: [ { title: 'Стартовий епізод' } ] },
-	];
+	useEffect(() => {
+		getMyPodcasts(token)
+			.then(res => {
+				console.log('Your podcasts:', res.data);
+				setPodcasts(res.data);
+			})
+			.catch(err => {
+				console.error('Error fetching podcasts:', err);
+			});
+	}, [token]);
 
-	const handleDelete = (id) => {
-		if (window.confirm('Видалити подкаст? (мок)')) {
-			alert('Подкаст видалено (мок)');
+	const handleDelete = async (id) => {
+		try {
+			await deletePodcast(id, token);
+			setPodcasts(prev => prev.filter(p => p.id !== id));
+		} catch (err) {
+			console.error('Error deleting podcast:', err);
 		}
 	};
 
@@ -21,11 +35,17 @@ const LibraryPage = () => {
 		<div className={common.library}>
 			<div className={styles.list}>
 				{podcasts.map(p => (
-					<PodcastCard key={p.id} podcast={p} showAdd={true} showDelete={true} onDelete={handleDelete} />
+					<PodcastCard
+						key={p.id}
+						podcast={p}
+						showAdd={true}
+						showDelete={true}
+						onDelete={handleDelete}
+					/>
 				))}
 			</div>
 		</div>
-  );
+	);
 };
 
-export default LibraryPage; 
+export default LibraryPage;
