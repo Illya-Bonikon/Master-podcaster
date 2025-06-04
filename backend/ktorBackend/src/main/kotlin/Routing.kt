@@ -209,6 +209,17 @@ fun Application.configureRouting(database: Database) {
 
                     call.respond(filtered)
                 }
+
+                get("/podcasts/all") {
+                    val principal = call.principal<JWTPrincipal>() ?: return@get
+                    if (principal.getRole() != "moderator") {
+                        call.respond(HttpStatusCode.Forbidden, errorResponse("🛡 Доступ лише для модераторів"))
+                        return@get
+                    }
+
+                    val allPodcasts = podcastService.getAll()
+                    call.respond(allPodcasts)
+                }
             }
 
             delete("/users/{id}") {
