@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import common from '../common.module.css';
 import { FaPlus, FaPodcast, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getEpisodes, getImageUrl } from '../../api';
+import { getEpisodes, getImageUrl, fetchImageFile } from '../../api';
+import defaultPodcast from '../../assets/defaultPodcast.png';
 
 const PodcastCard = ({ podcast, showAdd = true, showDelete = true, onDelete, isModerator }) => {
 	const navigate = useNavigate();
 	const [showModal, setShowModal] = useState(false);
 	const [episodeCount, setEpisodeCount] = useState(podcast.episodes?.length || 0); // початкове значення
 	const token = localStorage.getItem('token');
-	const [imageUrl, setImageUrl] = useState("https://4479-91-235-225-85.ngrok-free.app/media/image/ac3235e21f894f6cbd75af4d5a9a9d3a.png");
+	const [imageUrl, setImageUrl] = useState(null);
 
 	useEffect(() => {
 		if (!podcast.episodes) {
@@ -25,13 +26,21 @@ const PodcastCard = ({ podcast, showAdd = true, showDelete = true, onDelete, isM
 
 	useEffect(() => {
 		if (podcast?.imagePath) {
-			getImageUrl(podcast.imagePath, token)
-				.then(url => setImageUrl(url))
+			let revokedUrl = null;
+			fetchImageFile(podcast.imagePath)
+				.then(res => {
+					const url = URL.createObjectURL(res.data);
+					setImageUrl(url);
+					revokedUrl = url;
+				})
 				.catch(() => setImageUrl(null));
+			return () => {
+				if (revokedUrl) URL.revokeObjectURL(revokedUrl);
+			};
 		} else {
 			setImageUrl(null);
 		}
-	}, [podcast?.imagePath, token]);
+	}, [podcast?.imagePath]);
 
 	const handleCancel = () => {
 		setShowModal(false);
@@ -51,14 +60,16 @@ const PodcastCard = ({ podcast, showAdd = true, showDelete = true, onDelete, isM
 			}}
 		>
 			{podcast?.imagePath && imageUrl ? (
-				<img
-					src={imageUrl}
-					alt={podcast.title}
-					style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 10, marginRight: '1rem', boxShadow: '0 2px 8px #0002' }}
-				/>
+				imageUrl && (
+					<img
+						src={imageUrl}
+						alt={podcast.title}
+						style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 10, marginRight: '1rem', boxShadow: '0 2px 8px #0002' }}
+					/>
+				)
 			) : (
 				<img
-					src={"https://4479-91-235-225-85.ngrok-free.app/media/image/ac3235e21f894f6cbd75af4d5a9a9d3a.png"}
+					src={defaultPodcast}
 					alt={podcast.title}
 					style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 10, marginRight: '1rem', boxShadow: '0 2px 8px #0002' }}
 				/>

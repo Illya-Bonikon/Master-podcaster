@@ -44,6 +44,9 @@ const LibraryPage = () => {
 					/>
 				))}
 			</div>
+			<div hidden={podcasts.length > 0} className={common.title} style={{fontSize: '2.5rem', marginTop: '2rem'}}>
+				У вас ще немає подкастів.
+			</div>
 		</div>
 	);
 };

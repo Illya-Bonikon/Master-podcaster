@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './RegisterForm.module.css';
 import common from '../common.module.css';
@@ -9,6 +9,8 @@ const RegisterForm = ({ onSubmit }) => {
 	const navigate = useNavigate();
 	const { register, handleSubmit, watch, formState: { errors } } = useForm();
 	const password = watch('password');
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirm, setShowConfirm] = useState(false);
 
 	const handleRegister = async data => {
 		try {
@@ -44,13 +46,41 @@ const RegisterForm = ({ onSubmit }) => {
 
 			<div className={common.field}>
 				<label htmlFor="password">Пароль</label>
-				<input id="password" type="password" {...register('password', { required: 'Введіть пароль', minLength: { value: 6, message: 'Мінімум 6 символів' } })} />
+				<div className={styles.inputWrapper}>
+					<input
+						id="password"
+						type={showPassword ? 'text' : 'password'}
+						{...register('password', { required: 'Введіть пароль', minLength: { value: 6, message: 'Мінімум 6 символів' } })}
+					/>
+					<button
+						type="button"
+						onClick={() => setShowPassword(v => !v)}
+						className={styles.eyeButton}
+						aria-label={showPassword ? 'Сховати пароль' : 'Показати пароль'}
+					>
+						{showPassword ? '🙈' : '👁️'}
+					</button>
+				</div>
 				{errors.password && <span className={common.error}>{errors.password.message}</span>}
 			</div>
 
 			<div className={common.field}>
 				<label htmlFor="confirm">Підтвердіть пароль</label>
-				<input id="confirm" type="password" {...register('confirm', { required: 'Підтвердіть пароль', validate: value => value === password || 'Паролі не співпадають' })} />
+				<div className={styles.inputWrapper}>
+					<input
+						id="confirm"
+						type={showConfirm ? 'text' : 'password'}
+						{...register('confirm', { required: 'Підтвердіть пароль', validate: value => value === password || 'Паролі не співпадають' })}
+					/>
+					<button
+						type="button"
+						onClick={() => setShowConfirm(v => !v)}
+						className={styles.eyeButton}
+						aria-label={showConfirm ? 'Сховати пароль' : 'Показати пароль'}
+					>
+						{showConfirm ? '🙈' : '👁️'}
+					</button>
+				</div>
 				{errors.confirm && <span className={common.error}>{errors.confirm.message}</span>}
 			</div>
 

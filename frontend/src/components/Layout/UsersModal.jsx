@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaTimes, FaSearch } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import styles from './UsersModal.module.css';
-import { getUsers } from '../../api';
+import { getUsers, getAllUsers, deleteUser } from '../../api';
 import { useEffect } from 'react';
 
 
@@ -11,20 +11,31 @@ const UsersModal = ({ onClose, asPage }) => {
 	const [users, setUsers] = useState([]);
 	const navigate = useNavigate();
 	const token = localStorage.getItem('token');
+	const isModerator = localStorage.getItem('role') === 'moderator';
 
 	useEffect(() => {
-		getUsers(token).then(res => setUsers(res.data)).catch(e => console.error(e));
+		if (isModerator) {
+			getAllUsers(token)
+				.then(res => setUsers(res.data))
+				.catch(e => console.error(e));
+		} else {
+			getUsers(token)
+				.then(res => setUsers(res.data))
+				.catch(e => console.error(e));
+		}			
 	}, []);
 
 	const filtered = users.filter(u =>
-		u.name.toLowerCase().includes(search.toLowerCase()) ||
-		u.email.toLowerCase().includes(search.toLowerCase())
+		(u.displayName && u.displayName.toLowerCase().includes(search.toLowerCase())) ||
+		(u.email && u.email.toLowerCase().includes(search.toLowerCase()))
 	);
 
 	const handleDelete = (id) => {
-		if (window.confirm('Видалити користувача? (мок)')) {
-		setUsers(users => users.filter(u => u.id !== id));
-		alert('Користувача видалено (мок)');
+		if (!isModerator) return;
+		if (window.confirm('Видалити користувача?')) {
+			deleteUser(id, token)
+				.then(() => setUsers(users => users.filter(u => u.id !== id)))
+				.catch(e => alert('Помилка видалення: ' + (e.response?.data?.message || e.message)));
 		}
 	};
 
@@ -46,7 +57,7 @@ const UsersModal = ({ onClose, asPage }) => {
 					{filtered.length === 0 && <li className={styles.usersEmpty}>Нічого не знайдено</li>}
 					{filtered.map(u => (
 					<li key={u.id} className={styles.usersListItem}>
-						<span className={styles.usersListName}>{u.name} <span className={styles.usersListEmail}>({u.email})</span></span>
+						<span className={styles.usersListName}>{u.displayName} <span className={styles.usersListEmail}>({u.email})</span></span>
 						<button className={styles.usersDeleteBtn} onClick={() => handleDelete(u.id)}>Видалити</button>
 					</li>
 					))}

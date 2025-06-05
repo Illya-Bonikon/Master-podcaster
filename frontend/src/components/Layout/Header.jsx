@@ -109,6 +109,8 @@ const Header = () => {
 								onClick={() => {
 									if (window.confirm('Ви дійсно бажаєте вийти з акаунту?')) {
 										localStorage.removeItem('token');
+										localStorage.removeItem('role');
+										window.dispatchEvent(new Event('tokenChanged'));
 										window.location.href = '/';
 									}
 								}}

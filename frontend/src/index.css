@@ -22,7 +22,10 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
-	--color-accent-hover: #ff9800cc;
+	--color-primary: #646cff;
+	--color-primary-hover: #535bf2;
+	--color-accent: #ff9800;
+	--color-accent-hover: #e68900;
 	--color-danger-hover: #b71c1c;
 	--color-success-hover: #388e3c;
 }
@@ -31,8 +34,8 @@
 	--input-border-color: #484848;
 	--color-bg: #f1f1f1b6;
 	--color-bg-light: #f2f2f2;
-	--color-primary: #3f51b5;
-	--color-primary-hover: #303f9f;
+	--color-primary: #646cff;
+	--color-primary-hover: #535bf2;
 	--color-secondary: #e0e0e0;
 	--color-text: #213547;
 	--color-text-light: #4a4a4a;
@@ -72,7 +75,6 @@ body {
 	display: flex;
 	place-items: center;
 	min-width: 320px;
-	min-height: 100vh;
 	background: transparent;
 	color: var(--color-text);
 }
@@ -93,7 +95,7 @@ h1 {
 
 button {
 	border-radius: var(--border-radius);
-	border: 1px solid transparent;
+	border: 2px solid transparent;
 	padding: 0.6em 1.2em;
 	font-size: 1em;
 	font-weight: 500;

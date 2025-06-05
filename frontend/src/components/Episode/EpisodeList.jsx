@@ -3,7 +3,7 @@ import styles from './EpisodeList.module.css';
 import common from '../common.module.css';
 import { FaPlay, FaPause } from 'react-icons/fa';
 import { PlayerContext } from '../Layout/PlayerContext.jsx';
-import { API_URL, getAudioUrl } from '../../api';
+import { API_URL, getAudioUrl, fetchAudioFile } from '../../api';
 
 const EpisodeList = ({ episodes, podcastTitle }) => {
 	const { playEpisode, currentEpisode, isPlaying } = useContext(PlayerContext);
@@ -11,13 +11,16 @@ const EpisodeList = ({ episodes, podcastTitle }) => {
 	const [audioUrls, setAudioUrls] = useState({});
 
 	useEffect(() => {
+		let revokedUrls = {};
 		(async () => {
 			const urls = {};
 			await Promise.all(episodes.map(async (e) => {
 				if (e.audioPath) {
 					try {
-						const res = await getAudioUrl(e.audioPath, token);
-						urls[e.id] = res;
+						const res = await fetchAudioFile(e.audioPath);
+						const url = URL.createObjectURL(res.data);
+						urls[e.id] = url;
+						revokedUrls[e.id] = url;
 					} catch {
 						urls[e.id] = undefined;
 					}
@@ -25,7 +28,12 @@ const EpisodeList = ({ episodes, podcastTitle }) => {
 			}));
 			setAudioUrls(urls);
 		})();
-	}, [episodes, token]);
+		return () => {
+			Object.values(revokedUrls).forEach(url => {
+				if (url) URL.revokeObjectURL(url);
+			});
+		};
+	}, [episodes]);
 
 	if (!episodes || episodes.length === 0) {
 		return <div className={common.empty}>Епізодів немає</div>;

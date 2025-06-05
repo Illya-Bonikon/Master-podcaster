@@ -26,10 +26,15 @@ const GlobalPodcasts = () => {
 	}, []);
 	
 
-	const handleDelete = (id) => {
-		if (window.confirm('Видалити подкаст? (мок)')) {
-		deletePodcast(id, token);
-		navigate('/global');
+	const handleDelete = async (id) => {
+		if (window.confirm('Видалити подкаст?')) {
+			try {
+				await deletePodcast(id, token);
+				setPodcasts(podcasts => podcasts.filter(p => p.id !== id));
+				navigate('/global');
+			} catch (e) {
+				alert('Помилка при видаленні подкасту: ' + (e?.response?.data?.message || e.message));
+			}
 		}
 	};
 

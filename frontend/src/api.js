@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const API_URL = 'https://4479-91-235-225-85.ngrok-free.app';
+const API_URL = 'https://0d2f-91-235-225-85.ngrok-free.app';
 
 // --- AUTH ---
 export const registerAPI = (data) => {
@@ -30,7 +30,7 @@ export const updatePodcast = (id, data, token) => {
   	return axios.patch(`${API_URL}/podcasts/${id}`, data, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true'  } });
 };
 export const deletePodcast = (id, token) => {
-  	return axios.delete(`${API_URL}/podcasts/${id}`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true'  } });
+  	return axios.delete(`${API_URL}/podcasts/${id}`, { headers: { Authorization: `Bearer ${token}` } });
 };
 
 // --- EPISODES ---
@@ -60,10 +60,74 @@ export const getUsers = (token) => {
 };
 
 // --- MEDIA PATH ---
-export const getImageUrl = (mediaPath, token) => {
-	return axios.get(`${API_URL}/${mediaPath}`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' } });
+export const getImageUrl = (mediaPath) => {
+	if (!mediaPath) return '';
+	if (mediaPath.startsWith('media/'))
+		return `${API_URL}/${mediaPath}`;
+	
+	if (mediaPath.startsWith('image/'))
+		return `${API_URL}/media/${mediaPath}`;
+
+	if (mediaPath.startsWith('/media/'))
+		return `${API_URL}${mediaPath}`;
+	
+	if (mediaPath.startsWith('/image/'))
+		return `${API_URL}/media${mediaPath}`;
+
+	return `${API_URL}/media/image/${mediaPath}`;
 };
-export const getAudioUrl = (mediaPath, token) => {
-	return axios.get(`${API_URL}/${mediaPath}`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' } });
+
+export const getAudioUrl = (mediaPath) => {
+	if (!mediaPath) return '';
+	if (mediaPath.startsWith('media/')) 
+		return `${API_URL}/${mediaPath}`;
+	if (mediaPath.startsWith('audio/'))
+		return `${API_URL}/media/${mediaPath}`;
+	
+	if (mediaPath.startsWith('/media/'))
+		return `${API_URL}${mediaPath}`;
+	
+	if (mediaPath.startsWith('/audio/'))
+		return `${API_URL}/media${mediaPath}`;
+	
+
+	return `${API_URL}/media/audio/${mediaPath}`;
 };
+
+export const fetchImageFile = (mediaPath) => {
+	return axios.get(getImageUrl(mediaPath), { headers: { 'ngrok-skip-browser-warning': 'true' }, responseType: 'blob' });
+};
+
+export const fetchAudioFile = (mediaPath) => {
+	return axios.get(getAudioUrl(mediaPath), { headers: { 'ngrok-skip-browser-warning': 'true' }, responseType: 'blob' });
+};
+
+export const getAllUsers = (token) => {
+	return axios.get(`${API_URL}/users/all`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' } });
+};
+
+export const deleteUser = (id, token) => {
+	return axios.delete(`${API_URL}/users/${id}`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' } });
+};
+
+export const getAllPodcasts = (token) => {
+	return axios.get(`${API_URL}/podcasts`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' } });
+};
+
+export const getAllPodcastsAdmin = (token) => {
+	return axios.get(`${API_URL}/users/podcasts/all`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' } });
+};
+
+export const uploadAudio = (file, token) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  return axios.post(`${API_URL}/media/audio/upload`, formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'ngrok-skip-browser-warning': 'true',
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 export { API_URL };

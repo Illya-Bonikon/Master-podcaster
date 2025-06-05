@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import EpisodeList from '../Episode/EpisodeList';
 import common from '../common.module.css';
 import { FaPodcast } from 'react-icons/fa';
-import { getPodcastById, getEpisodes, getImageUrl } from '../../api';
+import { getPodcastById, getEpisodes, getImageUrl, fetchImageFile } from '../../api';
 import { useParams } from 'react-router-dom';
+import defaultPodcast from '../../assets/defaultPodcast.png';
 
 const PodcastDetails = () => {
 	const token = localStorage.getItem('token');
@@ -40,13 +41,21 @@ const PodcastDetails = () => {
 
 	useEffect(() => {
 		if (podcast?.imagePath) {
-			getImageUrl(podcast.imagePath, token)
-				.then(url => setImageUrl(url))
+			let revokedUrl = null;
+			fetchImageFile(podcast.imagePath)
+				.then(res => {
+					const url = URL.createObjectURL(res.data);
+					setImageUrl(url);
+					revokedUrl = url;
+				})
 				.catch(() => setImageUrl(null));
+			return () => {
+				if (revokedUrl) URL.revokeObjectURL(revokedUrl);
+			};
 		} else {
 			setImageUrl(null);
 		}
-	}, [podcast?.imagePath, token]);
+	}, [podcast?.imagePath]);
 
 	if (loading) return <div>Завантаження подкасту...</div>;
 	if (error) return <div>{error}</div>;
@@ -58,14 +67,16 @@ const PodcastDetails = () => {
 		<div className={common.details}>
 			<div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
 				{podcast?.imagePath && imageUrl ? (
-					<img
-						src={imageUrl}
-						alt={podcast.title}
-						style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 12, boxShadow: '0 2px 8px #0002' }}
-					/>
+					imageUrl && (
+						<img
+							src={imageUrl}
+							alt={podcast.title}
+							style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 12, boxShadow: '0 2px 8px #0002' }}
+						/>
+					)
 				) : (
 					<img
-						src={"https://4479-91-235-225-85.ngrok-free.app/media/image/ac3235e21f894f6cbd75af4d5a9a9d3a.png"}
+						src={defaultPodcast}
 						alt={podcast.title}
 						style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 12, boxShadow: '0 2px 8px #0002' }}
 					/>
