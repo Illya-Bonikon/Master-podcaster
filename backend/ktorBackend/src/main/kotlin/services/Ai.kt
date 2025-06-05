@@ -8,6 +8,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import io.ktor.client.plugins.HttpTimeout
 
 @Serializable
 data class GenerateImageRequest(val text: String)
@@ -31,6 +32,11 @@ class PythonAiService(
                 prettyPrint = true
                 isLenient = true
             })
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = 60_000
+            connectTimeoutMillis = 30_000
+            socketTimeoutMillis = 60_000
         }
     }
 
