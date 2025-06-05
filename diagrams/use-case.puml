@@ -4,34 +4,79 @@ skinparam packageStyle rectangle
 
 actor User
 actor Moderator
-actor AI_System as AI
 
 rectangle "Podcast App" {
 
-	User ---> (Register/Login)
-	User ---> (Browse Podcasts)
-	User ---> (Search Podcasts)
-	User ---> (Sort Podcasts)
-	User ---> (View Podcast Details)
-	User ---> (Change personal information)
-	User ---> (Load Podcast)
-	User ---> (Create Podcast)
-	User ---> (Delete Podcast)
-	User ---> (View info about team)
-	User ---> (Generate Episode)
-	User ---> (Listen to Episode)
+  ' Authentication
+  User --> (Authentication)
+  (Authentication) <.. (Register) : <<extend>>
+  (Authentication) ..> (Login) : <<include>>
+  (Authentication) <.. (Logout) : <<extend>>
+  
+  ' User Profile Management
+  User --> (Manage Profile)
+  (Manage Profile) ..> (View Profile) : <<include>>
+  (Manage Profile) <.. (Edit Profile Data) : <<extend>>
+  (Edit Profile Data) <.. (Change Password) : <<extend>>
+  (Edit Profile Data) <.. (Edit Name) : <<extend>>
+  (Edit Profile Data) <.. (Change Email) : <<extend>>
+  
+  ' Podcast Discovery
+  User --> (Discover Podcasts)
+  (Discover Podcasts) ..> (Browse Global Podcasts) : <<include>>
+  (Discover Podcasts) ..> (Browse Own Podcasts) : <<extend>>
+  (Discover Podcasts) <.. (Search Podcasts) : <<extend>>
+  (Search Podcasts) ..> (Sort Podcasts) : <<include>>
+  
+  ' Podcast Interaction
+  User --> (View Podcast Details)
+  (View Podcast Details) ..> (Load Podcast Data) : <<include>>
+  (Load Podcast Data) ..> (View Description) : <<include>>
+  (Load Podcast Data) ..> (View Image) : <<include>>
+  (View Podcast Details) ..> (View Episodes List) : <<include>>
+  (View Episodes List) ..> (View Episodes Summary) : <<include>>
+  
+  ' Podcast Creation & Management
+  User --> (Create Podcast)
+  (Create Podcast) ..> (Fill Podcast Details) : <<include>>
+  (Create Podcast) ..> (Generate Podcast Logo) : <<include>>
+  (Create Podcast) <.. (Set Privacy Settings) : <<extend>>
+  
+  User --> (Manage Own Podcasts)
+  (Manage Own Podcasts) ..> (View Own Podcasts) : <<include>>
+  (Manage Own Podcasts) <.. (Delete Own Podcast) : <<extend>>
+  (Manage Own Podcasts) <.. (Publish/Unpublish) : <<extend>>
+  
+  ' Episode Management
+  User --> (Manage Episodes)
+  (Manage Episodes) ..> (View Episodes) : <<include>>
+  (Create Episode) ..> (Generate Episode Script) : <<include>>
+  (Create Episode) ..> (Generate Audio) : <<include>>
+  (Manage Episodes) <.. (Create Episode) : <<extend>>
+  
+  ' Audio Playback
+  User --> (Listen to Content)
+  (Listen to Content) ..> (Load Audio Player) : <<include>>
+  (Listen to Content) ..> (Control Playback) : <<include>>
+  (Listen to Content) <.. (Adjust Volume) : <<extend>>
+  (Listen to Content) <.. (Skip Forward/Back) : <<extend>>
+  
+  ' Information and Support
+  User --> (View About Team)
 
-
-	(Generate Episode) ---> AI : Send prompt
-	AI ---> (Generate Episode) : Return text
-
-	(Generate Podcast logo) ---> AI : Send prompt
-	AI ---> (Generate Podcast logo) : Return image
-
-	(Generate audio) ---> AI : Send prompt
-	AI ---> (Generate audio) : Return audio
-
-	Moderator ---> (Ban User)
-	Moderator ---> (Delete Podcast)
+  User --> (Change Color Theme)
+  
+  ' Moderation
+  Moderator --> (Moderate Content)
+  (Moderate Content) ..> (Browse All Podcasts) : <<include>>
+  (Moderate Content) <.. (Search Any Podcast) : <<extend>>
+  (Moderate Content) <.. (Delete Podcast) : <<extend>>
+  
+  Moderator --> (Manage Users)
+  (Manage Users) ..> (View User List) : <<include>>
+  (Manage Users) ..> (View User Details) : <<include>>
+  (Manage Users) <.. (Search User) : <<extend>>
+  (Manage Users) <.. (Delete User) : <<extend>>
 }
+
 @enduml

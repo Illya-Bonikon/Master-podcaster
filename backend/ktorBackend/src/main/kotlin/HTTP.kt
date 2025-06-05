@@ -12,7 +12,8 @@ fun Application.configureHTTP() {
     }
     install(Compression)
     install(CORS) {
-        anyHost()
+        allowHost("localhost:5173", schemes = listOf("http"))
+        allowHost("0d2f-91-235-225-85.ngrok-free.app", schemes = listOf("https"))
         allowMethod(HttpMethod.Options)
         allowMethod(HttpMethod.Put)
         allowMethod(HttpMethod.Delete)
