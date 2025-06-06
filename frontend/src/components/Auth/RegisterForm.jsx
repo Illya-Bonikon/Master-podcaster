@@ -19,7 +19,7 @@ const RegisterForm = ({ onSubmit }) => {
 				password: data.password,
 				displayName: data.name
 			}
-			console.log(restructureData);
+
 			await registerAPI(restructureData);
 			alert('Реєстрація успішна! Тепер увійдіть.');
 			navigate('/login');

@@ -111,7 +111,7 @@ const Player = () => {
 						/>
 					) : (
 						<img
-							src={"https://4479-91-235-225-85.ngrok-free.app/media/image/ac3235e21f894f6cbd75af4d5a9a9d3a.png"}
+							src={"../assets/defaultPodcast.png"} 
 							alt={currentEpisode?.podcastTitle || 'Подкаст'}
 							style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 8, boxShadow: '0 2px 8px #0002', marginRight: 12 }}
 						/>

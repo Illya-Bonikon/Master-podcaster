@@ -1,11 +1,12 @@
 .profile {
+	min-width: 30vw;
+	max-width: 80vw;
 	background: var(--color-bg-light);
 	border-radius: var(--border-radius);
 	border: 2px solid var(--color-primary);
 	box-shadow: var(--shadow-sm);
 	backdrop-filter: blur(8px);
 	padding: 2rem 2.5rem;
-	max-width: 400px;
 	margin: 2rem auto;
 	display: flex;
 	flex-direction: column;

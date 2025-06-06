@@ -14,7 +14,6 @@ const LibraryPage = () => {
 	useEffect(() => {
 		getMyPodcasts(token)
 			.then(res => {
-				console.log('Your podcasts:', res.data);
 				setPodcasts(res.data);
 			})
 			.catch(err => {

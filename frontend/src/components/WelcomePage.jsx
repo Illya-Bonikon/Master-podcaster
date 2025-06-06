@@ -1,9 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import common from './common.module.css';
 
 const WelcomePage = () => {
-	const navigate = useNavigate();
 	return (
 		<div className={common.wrapper}>
 			<div className={common.logoBox}>
@@ -16,8 +15,8 @@ const WelcomePage = () => {
 			</div>
 			
 			<div className={common.btns}>
-				<button className={common.login} onClick={() => navigate('/login')}>Увійти</button>
-				<button className={common.register} onClick={() => navigate('/register')}>Реєстрація</button>
+				<Link className={common.login} to="/login">Увійти</Link>
+				<Link className={common.register} to="/register">Реєстрація</Link>
 			</div>
 		</div>
 	);

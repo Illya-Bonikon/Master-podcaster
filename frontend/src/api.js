@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const API_URL = 'https://0d2f-91-235-225-85.ngrok-free.app';
+const API_URL = 'https://8aba-91-235-225-85.ngrok-free.app';
 
 // --- AUTH ---
 export const registerAPI = (data) => {

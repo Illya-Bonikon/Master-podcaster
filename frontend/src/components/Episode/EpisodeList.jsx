@@ -38,7 +38,7 @@ const EpisodeList = ({ episodes, podcastTitle }) => {
 	if (!episodes || episodes.length === 0) {
 		return <div className={common.empty}>Епізодів немає</div>;
 	}
-	console.log(episodes)
+
 	return (
 		<ul className={common.list}>
 			{episodes.map((e, index) => (

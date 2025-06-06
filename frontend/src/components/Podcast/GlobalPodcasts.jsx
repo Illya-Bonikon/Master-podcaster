@@ -17,8 +17,7 @@ const GlobalPodcasts = () => {
 		getPublicPodcasts()
 
 		.then(res => {setPodcasts(res.data)
-			console.log(res);
-			console.log('GlobalPodcasts useEffect', res.data);
+
 		})
 		.catch(e => setError(e.message))
 		.finally(() => setLoading(false));

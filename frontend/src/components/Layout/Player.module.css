@@ -198,6 +198,7 @@
 
 .volume {
 	width: 100px;
+	padding: 0.6em 1em;
 	height: 6px;
 	background: transparent;
 	-webkit-appearance: none;
@@ -221,6 +222,7 @@
 		#b0b0b0 var(--volume-percent),
 		#b0b0b0 100%
 	);
+	
 	border-radius: 4px;
 }
 

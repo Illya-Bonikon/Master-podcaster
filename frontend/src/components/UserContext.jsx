@@ -29,9 +29,7 @@ export const UserProvider = ({ children }) => {
 	} else {
 		localStorage.removeItem('role');
 	}
-	
-	console.log(decoded);
-	console.log(isModerator);
+
 	
 	return (
 		<UserContext.Provider value={{ isModerator }}>

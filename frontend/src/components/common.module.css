@@ -109,6 +109,8 @@ h2 {
 
 .profile {
 	
+	min-width: 30vw;
+	max-width: 80vw;
 	background: transparent;
 	box-shadow: var(--shadow-sm);
 	backdrop-filter: blur(8px);
@@ -116,8 +118,6 @@ h2 {
 	border: 2px solid var(--color-primary);
 	box-shadow: var(--shadow-sm);
 	backdrop-filter: blur(8px);
-	min-width: 400px;
-	max-width: 90vw;
 	margin: 2rem auto;
 	display: flex;
 	flex-direction: column;
@@ -127,6 +127,8 @@ h2 {
 
 .podcastCard, .details, .libraryPage, .episodeList, .searchPage {
 	
+	min-width: 30vw;
+	max-width: 80vw;
 	box-shadow: var(--shadow-sm);
 	backdrop-filter: blur(8px);
 	border-radius: var(--border-radius);
@@ -261,7 +263,8 @@ h2 {
 		margin-bottom: 10px;
 	}
   .libraryPage, .profile, .card, .modalWindow, .wrapper, .library, .list, .podcastCard, .searchPage, .details, .episodeList, .centered, .item {
-    min-width: 0 !important;
+    min-width: 30vw;
+	max-width: 90vw;
     box-sizing: border-box;
     margin-left: 0 !important;
     margin-right: 0 !important;
