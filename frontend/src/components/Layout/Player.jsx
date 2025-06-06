@@ -80,6 +80,7 @@ const Player = () => {
 				onChange={e => handleSeek(Number(e.target.value))}
 				style={{ '--progress-percent': `${(progress/(currentEpisode?.duration||audioRef.current?.duration||100))*100}%` }}
 				disabled={!currentEpisode?.audioUrl}
+				step="0.1"
 			/>
 
 			<div className={styles.player}>
@@ -91,7 +92,11 @@ const Player = () => {
 						className={styles.controlBtn}
 						onClick={() => {
 							if (!currentEpisode?.audioUrl) return;
-							isPlaying ? pauseEpisode() : playEpisode(currentEpisode, episodes);
+							if (isPlaying) {
+								pauseEpisode();
+							} else {
+								playEpisode(currentEpisode, episodes);
+							}
 						}}
 						disabled={!currentEpisode?.audioUrl}
 					>
@@ -120,9 +125,7 @@ const Player = () => {
 						<div className={styles.podcastTitle}>{currentEpisode?.podcastTitle || 'Назва подкасту'}</div>
 					</div>
 				</div>
-				<span className={styles.time} style={{ marginLeft: 12, fontSize: '1em', color: '#aaa', minWidth: 70, textAlign: 'right'}}>
-					{formatTime(progress)}/{formatTime(currentEpisode?.duration || audioRef.current?.duration || 0)}
-				</span>
+
 
 				<div className={styles.right}>
 					<FaVolumeUp className={styles.volumeIcon} />

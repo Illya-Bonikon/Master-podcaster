@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import EpisodeList from '../Episode/EpisodeList';
 import common from '../common.module.css';
-import { FaPodcast } from 'react-icons/fa';
-import { getPodcastById, getEpisodes, getImageUrl, fetchImageFile } from '../../api';
+import { FaPodcast, FaLock, FaLockOpen } from 'react-icons/fa';
+import { getPodcastById, getEpisodes, getImageUrl, fetchImageFile, updatePodcast } from '../../api';
 import { useParams } from 'react-router-dom';
 import defaultPodcast from '../../assets/defaultPodcast.png';
 
@@ -57,6 +57,15 @@ const PodcastDetails = () => {
 		}
 	}, [podcast?.imagePath]);
 
+	const toggleVisibility = async () => {
+		try {
+			await updatePodcast(id, token);
+			setPodcast(prev => ({ ...prev, isPublic: !prev.isPublic }));
+		} catch (err) {
+			console.error('Error toggling podcast visibility:', err);
+		}
+	};
+
 	if (loading) return <div>Завантаження подкасту...</div>;
 	if (error) return <div>{error}</div>;
 	if (!podcast) return <div>Подкаст не знайдено.</div>;
@@ -90,6 +99,19 @@ const PodcastDetails = () => {
 					</div>
 					<div className={common.subtitle}>Епізодів: {episodes.length}</div>
 				</div>
+				<button 
+					onClick={toggleVisibility}
+					style={{ 
+						marginLeft: 'auto',
+						background: 'none',
+						border: 'none',
+						cursor: 'pointer',
+						fontSize: '1.5rem',
+						color: podcast?.isPublic ? '#4CAF50' : '#f44336'
+					}}
+				>
+					{podcast?.isPublic ? <FaLockOpen /> : <FaLock />}
+				</button>
 			</div>
 			
 			<EpisodeList episodes={episodes} podcastTitle={podcast.title} />

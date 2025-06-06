@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 
-const API_URL = 'https://8aba-91-235-225-85.ngrok-free.app';
+const API_URL = 'https://cc11-91-235-225-85.ngrok-free.app';
 
 // --- AUTH ---
 export const registerAPI = (data) => {
@@ -26,8 +26,8 @@ export const getPodcastById = (id, token ) => {
 export const createPodcast = (data, token) => {
   	return axios.post(`${API_URL}/podcasts`, data, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true'  } });
 };
-export const updatePodcast = (id, data, token) => {
-  	return axios.patch(`${API_URL}/podcasts/${id}`, data, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true'  } });
+export const updatePodcast = (id,  token) => {
+  	return axios.patch(`${API_URL}/podcasts/${id}`, { headers: { Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true'  } });
 };
 export const deletePodcast = (id, token) => {
   	return axios.delete(`${API_URL}/podcasts/${id}`, { headers: { Authorization: `Bearer ${token}` } });
