@@ -113,7 +113,7 @@ fun Application.configureRouting(database: Database) {
                         return@post call.respond(HttpStatusCode.Forbidden, errorResponse("Unauthorized"))
                     }
                     val request = call.receive<CreateEpisodeRequest>()
-                    val fullPrompt = podcast.prompt + "\n" + request.prompt
+                    val fullPrompt = "Загальна тема подкасту:" + podcast.prompt + "\nТема цього епізоду" + request.prompt
 
                     val audioResponse = aiSemaphore.withPermit {
                         aiService.generateAudioSummary(fullPrompt)
